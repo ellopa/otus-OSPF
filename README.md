@@ -28,7 +28,7 @@
 
 Маршрутизаторы в OSPF классифицируются на основе выполняемой ими функции:
 
-![img](./1.png)
+<img src="https://github.com/ellopa/otus-OSPF/blob/main/1.png" width=50% height=50%>
 
 - Internal router (внутренний маршрутизатор) — маршрутизатор, все интерфейсы которого находятся в одной и той же области.
 - Backbone router (магистральный маршрутизатор) — это маршрутизатор, который находится в магистральной зоне (area 0).
@@ -69,13 +69,13 @@
 
 Так как мы планируем настроить OSPF, все 3 виртуальные машины должны быть соединены между собой (разными VLAN), а также иметь одну (или несколько) доолнительных сетей, к которым, далее OSPF сформирует маршруты. Исходя из данных требований, мы можем нарисовать топологию сети:
 
-![img](./2.png)
+<img src="https://github.com/ellopa/otus-OSPF/blob/main/2.png" width=50% height=50%>
 
 Обратите внимание, сети, указанные на схеме не должны использоваться в Oracle Virtualbox, иначе Vagrant не сможет собрать стенд и зависнет. По умолчанию Virtualbox использует сеть 10.0.2.0/24. Если была настроена другая сеть, то проверить её можно в настройках программы: **VirtualBox — File — Preferences — Network — щёлкаем по созданной сети**
 
-![img](./3.png)
+<img src="https://github.com/ellopa/otus-OSPF/blob/main/3.png" width=50% height=50%>
 
-- Создаём каталог, в котором будут храниться настройки виртуальной машины. В каталоге создаём файл с именем [Vagrantfile](Vagrantfile)
+- Создаём каталог, в котором будут храниться настройки виртуальной машины. В каталоге создаём файл с именем [Vagrantfile](/Vagrantfile)
 > В данный Vagrantfile уже добавлен модуль запуска Ansible-playbook.
 
 - После создания данного файла, из терминала идём в каталог, в котором лежит данный Vagrantfile и вводим команду vagrant up
@@ -288,7 +288,7 @@ nhrpd=no
 
 - Настройка OSPF. Для настройки OSPF нам потребуется создать файл /etc/frr/frr.conf который будет содержать в себе информацию о требуемых интерфейсах и OSPF. Пример создания файла на хосте router1.
 
-  - Необходимо узнать имена интерфейсов и их адреса. Сделать это можно с помощью двух способов: 
+- Необходимо узнать имена интерфейсов и их адреса. Сделать это можно с помощью двух способов: 
    - посмотреть в linux: ip a | grep inet
 ```bash
 root@router1:~# ip a | grep "inet "
@@ -638,7 +638,7 @@ root@router1:~# ip a | grep eth2
 ```
 ### Настройка OSPF c помощью Ansible
 
-- Файл [Ansible](/provision_1.yml)
+- Файл [Ansible](/provision.yml)
 >- Файлы daemons и frr.conf должны лежать в каталоге ansible/templates.
 
 >- Содержимое файла daemons одинаково на всех хостах, а вот содержание файла frr.conf на всех хостах будет разное.
@@ -652,7 +652,7 @@ ansible router1 -i hosts -m setup -e "host_key_checking=false"
 >- Команда выполнятся из каталога проекта (где находится Vagrantfile).
 >- Помимо фактов Jinja2 может брать информацию из файлов hosts и defaults/main.yml (так как мы указали его в начале файла provision.yml)
 
-- Файл [jinja2](/frr.conf.j2):
+- Файл [jinja2](/templates/frr.conf.j2):
 
 >- В файле frr.conf у нас есть строка: hostname router1  
 >- При копировании файла на router2 и router3 нужно будет поменять имя - сделать это можно так: hostname {{ ansible_hostname }} 
@@ -802,7 +802,7 @@ listening on eth1, link-type EN10MB (Ethernet), snapshot length 262144 bytes
         state: restarted
         enabled: true
 ```
-- Пример добавления «дорогого» интерфейса в template frr.conf [jinja2](/frr.conf_asr.j2) добавлено:
+- Пример добавления «дорогого» интерфейса в template frr.conf [jinja2](/templates/frr.conf_asr.j2) добавлено:
 
 ```bash
 {% if ansible_hostname == 'router1' %}
@@ -880,7 +880,7 @@ root@router2:~# tcpdump -i  eth2
 ```
 symmetric_routing: false
 ```
-- Далее в [template](/frr.conf_sr.j2) frr.conf добавить условие:
+- Далее в [template](/templates/frr.conf_sr.j2) frr.conf добавить условие:
 
 ```bash
 {% if ansible_hostname == 'router1' %}
