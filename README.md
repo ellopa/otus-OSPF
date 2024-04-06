@@ -896,7 +896,7 @@ symmetric_routing: false
     - Если имя хоста router2 И значение параметра symmetric_routing true — то добавляется стоимость интерфейса 1000
     - В остальных случаях добавляется закомментированный параметр
 
-- Для удобного переключения параметров нам потребуется запускать из ansible-playbook только 2 последних модуля. Чтобы не ждать выполнения всего плейбука, можно добавить тег "setup_ospf" к модулям, получится [Playbook](/provision_sr.yml).
+- Для удобного переключения параметров нам потребуется запускать из ansible-playbook только 2 последних модуля. Чтобы не ждать выполнения всего плейбука, можно добавить тег "setup_ospf" к модулям.
 ```bash
     - name: set up OSPF
       template:
@@ -920,7 +920,7 @@ symmetric_routing: false
 ```bash
 ansible-playbook -i ansible/hosts -l all provision_sr.yml -t setup_ospf -e "host_key_checking=false"
 ```
-
+-  Получится [Playbook](/provision_sr.yml)
  
 ## Рекомендуемые источники
 
