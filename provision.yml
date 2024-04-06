@@ -1,0 +1,16 @@
+---
+- name: OSPF
+  hosts: all
+  become: true
+  vars_files:
+    - defaults/main.yml
+  tasks:
+  - name: install base tools
+    apt:
+      name:
+        - vim
+        - traceroute
+        - tcpdump
+        - net-tools
+      state: present
+      update_cache: true
